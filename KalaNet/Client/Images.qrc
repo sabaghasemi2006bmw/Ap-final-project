@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Images/First_BackGround.png</file>
+        <file>Images/Logo.png</file>
+        <file>Images/close-eye.png</file>
+        <file>Images/open-eye.png</file>
+        <file>Images/SignUpBack.jpg</file>
+        <file>Images/store_background.jpg</file>
+        <file>Images/ChatPic.png</file>
+        <file>Images/Profile_Image.png</file>
+        <file>Images/shopping-cart.png</file>
+        <file>Images/logout.png</file>
+        <file>Images/search.png</file>
+        <file>Images/Personal_Info_back.png</file>
+        <file>Images/money.png</file>
+        <file>Images/Ad_registration.png</file>
+        <file>Images/image-upload.png</file>
+        <file>Images/refresh.png</file>
+        <file>Images/history.png</file>
+        <file>Images/History_bg.png</file>
+        <file>Images/WalletCharg_bg.png</file>
+        <file>Images/Basket_bg.png</file>
+        <file>Images/Chat_bg.png</file>
+        <file>Images/send-message.png</file>
+    </qresource>
+</RCC>
