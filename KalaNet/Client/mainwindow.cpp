@@ -100,6 +100,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onChargeResponse);
     connect(&NetworkManager::instance(), &NetworkManager::globalChatReceived,
             this, &MainWindow::onGlobalChatReceived);
+    connect(&NetworkManager::instance(), &NetworkManager::discountChecked,
+            this, &MainWindow::onDiscountChecked);
 
 
     this->setFixedSize(1200,800);
@@ -553,6 +555,29 @@ void MainWindow::onBuyItemResponse(bool success, QString message)
     }
 }
 
+void MainWindow::onDiscountChecked(bool success, QString message, int percent)
+{
+    // Reset Button UI
+    ui->Apply_discount->setText("Apply");
+    ui->Apply_discount->setEnabled(true);
+
+    if (success) {
+        this->discountFactor = (float)percent / 100.0f;
+
+        QMessageBox::information(this, "Success", QString("Code Applied! You get %1% Off.").arg(percent));
+
+        ui->Discount->setDisabled(true);
+
+        refreshCartDisplay();
+
+    } else {
+        this->discountFactor = 0.0f;
+
+        QMessageBox::warning(this, "Error", message);
+
+        refreshCartDisplay();
+    }
+}
 
 void MainWindow::on_pushButton_2_clicked()
 {
@@ -759,6 +784,10 @@ void MainWindow::on_basket_button_clicked()
 {
 
     ui->App->setCurrentIndex(7);
+    ui->Discount->setEnabled(true);
+    ui->Discount->clear();
+    this->discountFactor = 0.0;
+
 
     refreshCartDisplay();
 }
@@ -963,4 +992,21 @@ void MainWindow::on_pushButton_12_clicked()
     ui->lineEdit_3->clear();
     ui->App->setCurrentIndex(4);
 }
+
+
+void MainWindow::on_Apply_discount_clicked()
+{
+    QString code = ui->Discount->text().trimmed().toUpper();
+
+    if (code.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Please enter a discount code.");
+        return;
+    }
+
+    NetworkManager::instance().sendCheckDiscount(code);
+
+    ui->Apply_discount->setText("Checking...");
+    ui->Apply_discount->setEnabled(false);
+}
+
 

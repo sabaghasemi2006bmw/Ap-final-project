@@ -20,6 +20,7 @@ HEADERS += \
     ad.h \
     clienthandler.h \
     databasemanager.h \
+    discountcode.h \
     enums.h \
     mainwindow.h \
     message.h \

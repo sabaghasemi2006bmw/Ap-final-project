@@ -47,6 +47,7 @@ private slots:
     void onUpdateProfileResponse(bool success, QString message);
     void onCreateAdResponse(bool success, QString message);
     void onBuyItemResponse(bool success, QString message);
+    void onDiscountChecked(bool success, QString message, int percent);
 
     void refreshAds();
 
@@ -109,6 +110,8 @@ private slots:
     void on_chat_button_clicked();
 
     void on_pushButton_12_clicked();
+
+    void on_Apply_discount_clicked();
 
 private:
     Ui::MainWindow *ui;

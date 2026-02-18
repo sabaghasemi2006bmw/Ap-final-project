@@ -26,6 +26,7 @@ public:
     void sendChargeWallet(QString username, QString cardNum, long long amount, QString captcha);
     void sendGlobalMessage(QString sender, QString text);
     void getGlobalChat();
+    void sendCheckDiscount(QString code);
 
 signals:
     // Signals to update UI when Server replies
@@ -43,6 +44,7 @@ signals:
     void buyItemResponse(bool success, QString message);
 
     void globalChatReceived(QVector<Message> messages);
+    void discountChecked(bool success, QString message, int percent);
 
 private slots:
     void onReadyRead();

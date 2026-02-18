@@ -8,6 +8,7 @@
 #include "user.h" // From Common
 #include "message.h"
 #include <ad.h>
+#include "discountcode.h"
 class DatabaseManager : public QObject
 {
     Q_OBJECT
@@ -22,14 +23,16 @@ public:
 
     void saveGlobalChat();
 
-    bool registerUser(const User &newUser); // Returns false if username exists
+    void saveDiscounts();
+    void loadDiscounts();
+
+    bool registerUser(const User &newUser);
     User* loginUser(QString username, QString passwordHash);
 
     int getUserCount() const { return users.size(); }
     QVector<QString> getChatContacts(QString username);
 
 
-    // Ad Management
     bool createAd(Ad &newAd); // Pass by ref to update ID
     QVector<Ad> getAllAds();  // Returns all ads (for Admin)
     QVector<Ad> getApprovedAds(); // Returns only approved (for Clients)
@@ -42,12 +45,18 @@ public:
     void addGlobalMessage(const Message &msg);
     QVector<Message> getGlobalMessages();
 
+    void addDiscount(const DiscountCode &dc);
+    int getDiscountPercentage(QString code);
+    QVector<DiscountCode> getAllDiscounts();
+
 
 
 private:
     QVector<User> users;
     QVector<Ad> ads;
     QVector<Message> globalMessages;
+    QVector<DiscountCode> discountCodes;
+
 
     QMutex mutex;
 

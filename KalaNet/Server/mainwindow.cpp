@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setupTables();
     populateTables();
+    refreshDiscountTable();
 }
 
 void MainWindow::setupTables()
@@ -161,6 +162,68 @@ void MainWindow::populateTables()
     ui->AllAds_Table->setSortingEnabled(true);
 }
 
+void MainWindow::refreshDiscountTable()
+{
+    // 1. Get the Table Widget (Assume you named it 'table_discounts' in Designer)
+    QTableWidget *table = ui->table_discounts;
+
+    // 2. Setup Headers (Only needs to be done once, but safe to repeat)
+    if (table->columnCount() == 0) {
+        QStringList headers = {"Code", "Percentage", "Expiration Date", "Status"};
+        table->setColumnCount(headers.size());
+        table->setHorizontalHeaderLabels(headers);
+
+        // Styling
+        table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers); // Read-only
+    }
+
+    // 3. Clear Old Data
+    table->setRowCount(0);
+
+    // 4. Get Data from Database
+    QVector<DiscountCode> codes = db->getAllDiscounts();
+
+    // 5. Populate Table
+    QDate today = QDate::currentDate();
+
+    for (const DiscountCode &dc : codes) {
+        int row = table->rowCount();
+        table->insertRow(row);
+
+        // Col 0: Code
+        QTableWidgetItem *itemCode = new QTableWidgetItem(dc.code);
+        itemCode->setTextAlignment(Qt::AlignCenter);
+        table->setItem(row, 0, itemCode);
+
+        // Col 1: Percentage
+        QTableWidgetItem *itemPercent = new QTableWidgetItem(QString::number(dc.percentage) + "%");
+        itemPercent->setTextAlignment(Qt::AlignCenter);
+        // Color code high discounts
+        if (dc.percentage >= 50) itemPercent->setForeground(Qt::darkGreen);
+        table->setItem(row, 1, itemPercent);
+
+        // Col 2: Expiration Date
+        QTableWidgetItem *itemDate = new QTableWidgetItem(dc.expirationDate.toString("yyyy-MM-dd"));
+        itemDate->setTextAlignment(Qt::AlignCenter);
+        table->setItem(row, 2, itemDate);
+
+        // Col 3: Status (Valid vs Expired)
+        QTableWidgetItem *itemStatus = new QTableWidgetItem();
+        itemStatus->setTextAlignment(Qt::AlignCenter);
+
+        if (dc.expirationDate < today) {
+            itemStatus->setText("Expired");
+            itemStatus->setForeground(Qt::red);
+        } else {
+            itemStatus->setText("Active");
+            itemStatus->setForeground(Qt::blue);
+        }
+        table->setItem(row, 3, itemStatus);
+    }
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -219,5 +282,26 @@ void MainWindow::on_Reject_button_2_clicked()
 {
     db->loadAds();
     populateTables();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString code = ui->lineEdit_3->text().trimmed().toUpper();
+    int percent = ui->spinBox->value();
+    QDate expiry = ui->dateEdit->date();
+
+    if (code.isEmpty()) return;
+
+    DiscountCode dc;
+    dc.code = code;
+    dc.percentage = percent;
+    dc.expirationDate = expiry;
+
+    db->addDiscount(dc);
+
+    QMessageBox::information(this, "Success", "Coupon Added: " + code);
+
+    refreshDiscountTable();
 }
 

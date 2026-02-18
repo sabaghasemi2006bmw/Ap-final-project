@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="Loading"/>
     <widget class="QWidget" name="Login">
@@ -1600,7 +1600,7 @@ color:rgb(0, 85, 255)</string>
       <property name="geometry">
        <rect>
         <x>250</x>
-        <y>160</y>
+        <y>110</y>
         <width>691</width>
         <height>371</height>
        </rect>
@@ -1625,8 +1625,8 @@ color:rgb(0, 85, 255)</string>
      <widget class="QLineEdit" name="Discount">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>560</y>
+        <x>490</x>
+        <y>510</y>
         <width>321</width>
         <height>31</height>
        </rect>
@@ -1640,8 +1640,8 @@ color:rgb(193, 42, 44)</string>
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>550</y>
-        <width>171</width>
+        <y>500</y>
+        <width>181</width>
         <height>41</height>
        </rect>
       </property>
@@ -1657,9 +1657,9 @@ color:rgb(193, 42, 44)</string>
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>90</y>
+        <y>40</y>
         <width>781</width>
-        <height>651</height>
+        <height>721</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1672,8 +1672,8 @@ color:rgb(193, 42, 44)</string>
      <widget class="QPushButton" name="Apply_discount">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>560</y>
+        <x>830</x>
+        <y>510</y>
         <width>81</width>
         <height>31</height>
        </rect>
@@ -1694,7 +1694,7 @@ background-color:rgb(3, 157, 1)</string>
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>700</y>
+        <y>710</y>
         <width>80</width>
         <height>31</height>
        </rect>
@@ -1713,8 +1713,8 @@ color:rgb(193, 42, 44)</string>
      <widget class="QPushButton" name="pushButton_7">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>700</y>
+        <x>880</x>
+        <y>710</y>
         <width>81</width>
         <height>31</height>
        </rect>
@@ -1735,9 +1735,9 @@ background-color:rgb(3, 157, 1)</string>
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>610</y>
+        <y>560</y>
         <width>591</width>
-        <height>71</height>
+        <height>141</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1752,7 +1752,7 @@ color:rgbrgb(255, 144, 8)</string>
       <property name="geometry">
        <rect>
         <x>250</x>
-        <y>100</y>
+        <y>50</y>
         <width>211</width>
         <height>41</height>
        </rect>
@@ -1769,7 +1769,7 @@ color:rgbrgb(255, 144, 8)</string>
       <property name="geometry">
        <rect>
         <x>460</x>
-        <y>100</y>
+        <y>50</y>
         <width>211</width>
         <height>41</height>
        </rect>

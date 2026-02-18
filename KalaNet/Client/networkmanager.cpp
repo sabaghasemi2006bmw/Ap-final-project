@@ -169,6 +169,15 @@ void NetworkManager::onReadyRead() {
             emit globalChatReceived(msgs);
             break;
         }
+
+        case RequestType::CHECK_DISCOUNT_CODE: {
+            int percent = 0;
+            if (success) {
+                percent = data["percent"].toInt();
+            }
+            emit discountChecked(success, message, percent);
+            break;
+        }
         default: break;
         }
 
@@ -228,4 +237,13 @@ void NetworkManager::sendGlobalMessage(QString sender, QString text) {
 
 void NetworkManager::getGlobalChat() {
     sendPacket(RequestType::GET_GLOBAL_CHAT);
+}
+
+void NetworkManager::sendCheckDiscount(QString code)
+{
+    QByteArray payload;
+    QDataStream out(&payload, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_15);
+    out << code;
+    sendPacket(RequestType::CHECK_DISCOUNT_CODE, payload);
 }

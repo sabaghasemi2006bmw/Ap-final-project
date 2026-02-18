@@ -28,7 +28,7 @@ enum class RequestType {
     // Bonus Features
     SEND_GLOBAL_MESSAGE, // Send a message to the public room
     GET_GLOBAL_CHAT,
-    USE_DISCOUNT_CODE
+    CHECK_DISCOUNT_CODE
 
 };
 

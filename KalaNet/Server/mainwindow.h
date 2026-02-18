@@ -17,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void setupTables();
     void populateTables();
+    void refreshDiscountTable();;
     ~MainWindow();
 
 private slots:
@@ -25,6 +26,8 @@ private slots:
     void on_Reject_button_clicked();
 
     void on_Reject_button_2_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

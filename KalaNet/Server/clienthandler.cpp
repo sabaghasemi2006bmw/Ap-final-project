@@ -71,6 +71,26 @@ void ClientHandler::onReadyRead() {
             sendResponse(RequestType::GET_GLOBAL_CHAT, true, "OK", data);
             break;
         }
+        case RequestType::CHECK_DISCOUNT_CODE: {
+            QString code;
+            in >> code;
+
+            int percent = db->getDiscountPercentage(code);
+
+            if (percent > 0) {
+                // Valid
+                QJsonObject data;
+                data["percent"] = percent;
+                sendResponse(RequestType::CHECK_DISCOUNT_CODE, true, "Code Applied!", data);
+            }
+            else if (percent == -1) {
+                sendResponse(RequestType::CHECK_DISCOUNT_CODE, false, "Error: This code has expired.");
+            }
+            else {
+                sendResponse(RequestType::CHECK_DISCOUNT_CODE, false, "Error: Invalid Code.");
+            }
+            break;
+        }
         default: break;
         }
 

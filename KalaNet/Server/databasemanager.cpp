@@ -9,11 +9,11 @@
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent) {
     loadData();
     loadAds();
+    loadDiscounts();
 
 }
 
 
-//Users
 void DatabaseManager::loadData() {
     QMutexLocker locker(&mutex); // Lock so no one edits while we load
 
@@ -83,7 +83,6 @@ User* DatabaseManager::loginUser(QString username, QString passwordHash) {
     return nullptr;
 }
 
-//Ads
 void DatabaseManager::loadAds() {
     QMutexLocker locker(&mutex);
     QFile file(ADS_FILE);
@@ -134,6 +133,60 @@ void DatabaseManager::saveGlobalChat()
     // 5. Write the data
     file.write(doc.toJson());
     file.close();
+}
+
+void DatabaseManager::saveDiscounts()
+{
+    {
+        QJsonArray arr;
+        for (const DiscountCode &dc : discountCodes) {
+            arr.append(dc.toJson());
+        }
+
+        QJsonDocument doc(arr);
+
+        QFile file("discounts.json");
+        if (!file.open(QIODevice::WriteOnly)) {
+            qWarning() << "Could not open discounts.json for writing!";
+            return;
+        }
+
+        file.write(doc.toJson());
+        file.close();
+
+        qDebug() << "Discounts saved successfully.";
+    }
+}
+
+
+
+void DatabaseManager::loadDiscounts()
+{
+    QFile file("discounts.json");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "No discounts file found. Starting fresh.";
+        return;
+    }
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (doc.isNull() || !doc.isArray()) {
+        qWarning() << "Failed to parse discounts.json or invalid format.";
+        return;
+    }
+
+    discountCodes.clear();
+
+    QJsonArray arr = doc.array();
+    for (const QJsonValue &val : arr) {
+        if (val.isObject()) {
+            discountCodes.append(DiscountCode::fromJson(val.toObject()));
+        }
+    }
+
+    qDebug() << "Loaded" << discountCodes.size() << "discount codes.";
 }
 
 bool DatabaseManager::createAd(Ad &newAd) {
@@ -274,7 +327,6 @@ QVector<Message> DatabaseManager::getGlobalMessages() {
     return globalMessages;
 }
 
-
 long long DatabaseManager::chargeWallet(QString username, long long amount)
 {
     QMutexLocker locker(&mutex);
@@ -296,4 +348,35 @@ long long DatabaseManager::chargeWallet(QString username, long long amount)
 
     // User not found
     return -1;
+}
+
+void DatabaseManager::addDiscount(const DiscountCode &dc) {
+    QMutexLocker locker(&mutex);
+    discountCodes.append(dc);
+    saveDiscounts();
+}
+
+int DatabaseManager::getDiscountPercentage(QString code) {
+    QMutexLocker locker(&mutex);
+    QDate today = QDate::currentDate();
+
+    for (const DiscountCode &dc : discountCodes) {
+        if (dc.code == code) {
+            if (dc.expirationDate >= today) {
+                return dc.percentage;
+            } else {
+                return -1;
+            }
+        }
+    }
+    mutex.unlock();
+    saveDiscounts();
+    mutex.lock();
+    return 0;
+}
+
+QVector<DiscountCode> DatabaseManager::getAllDiscounts()
+{
+    QMutexLocker locker(&mutex);
+    return discountCodes;
 }
